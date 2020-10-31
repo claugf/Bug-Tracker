@@ -32,8 +32,8 @@ app.get("/projects/:slug", projectsController.getBySlug);
 app.get("/users", usersController.getController);
 //  Add an user
 app.post("/users", usersController.postController);
-//  Get an user by Name
-app.get("/users/:name", usersController.getByName);
+//  Get an user by Email
+app.get("/users/:email", usersController.getByEmail);
 
 //  Get all issues
 app.get("/issues", issuesController.getController);

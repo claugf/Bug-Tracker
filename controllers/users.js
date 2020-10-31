@@ -5,21 +5,22 @@ module.exports = () => {
     res.json(await users.get());
   };
 
-  const getByName = async (req, res) => {
-    res.json(await users.get(req.params.name));
+  const getByEmail = async (req, res) => {
+    res.json(await users.get(req.params.email));
   };
 
   const postController = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const usertype = req.body.usertype;
-    const result = await users.add(name, email, usertype);
+    const key = req.body.key;
+    const result = await users.add(name, email, usertype, key);
     res.json(result);
   };
 
   return {
     getController,
     postController,
-    getByName,
+    getByEmail,
   };
 };
