@@ -12,8 +12,9 @@ module.exports = () => {
   const postController = async (req, res) => {
     const title = req.body.title;
     const description = req.body.description;
-    const status = req.body.status;
-    const slug = req.body.slug;
+    const status = "open";
+    //console.log(req.params);
+    const slug = req.params.slug;
     const result = await issues.add(title, description, status, slug);
     res.json(result);
   };

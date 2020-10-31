@@ -34,8 +34,6 @@ app.get("/", (req, res) => {
 app.get("/projects", projectsController.getController);
 //  Add a project
 app.post("/projects", projectsController.postController);
-//  Get all issues for a project
-app.get("/projects/:slug/issues", issuesController.populatedController);
 //  Get a project by slug
 app.get("/projects/:slug", projectsController.getBySlug);
 
@@ -49,9 +47,11 @@ app.get("/users/:email", usersController.getByEmail);
 //  Get all issues
 app.get("/issues", issuesController.getController);
 //  Add an issue
-app.post("/issues", issuesController.postController);
+app.post("/projects/:slug/issues", issuesController.postController);
 //  Get an issue by issueNumber
 app.get("/issues/:issueNumber", issuesController.getByIssueNumber);
+//  Get all issues for a project
+app.get("/projects/:slug/issues", issuesController.populatedController);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
