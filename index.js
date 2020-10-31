@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 //  Setting controllers
 const projectsController = require("./controllers/projects")();
 const usersController = require("./controllers/users")();
+const issuesController = require("./controllers/issues")();
 
 const app = (module.exports = express());
 
@@ -33,6 +34,13 @@ app.get("/users", usersController.getController);
 app.post("/users", usersController.postController);
 //  Get an user by Name
 app.get("/users/:name", usersController.getByName);
+
+//  Get all issues
+app.get("/issues", issuesController.getController);
+//  Add an issue
+app.post("/issues", issuesController.postController);
+//  Get an issue by issueNumber
+app.get("/issues/:number", issuesController.getByNumber);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

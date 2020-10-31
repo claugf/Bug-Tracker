@@ -10,7 +10,7 @@ module.exports = () => {
       return projects;
     }
 
-    //  In case slug is set, we pass by param
+    //  In case slug is set, we pass it by param
     const project = await db.get(COLLECTION, { slug });
     return project;
   };

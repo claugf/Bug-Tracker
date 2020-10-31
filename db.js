@@ -30,14 +30,24 @@ module.exports = () => {
       });
     });
   };
-  const authors = [
-    { id: 1, name: "William Gibson" },
-    { id: 2, name: "Neil Stephenson" },
-  ];
+
+  const count = (collectionName) => {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+        const db = client.db(DB_NAME);
+        const collection = db.collection(collectionName);
+
+        collection.countDocuments({}, (err, docs) => {
+          resolve(docs);
+          client.close();
+        });
+      });
+    });
+  };
 
   return {
-    authors,
     get,
     add,
+    count,
   };
 };
