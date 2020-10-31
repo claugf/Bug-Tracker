@@ -1,42 +1,43 @@
+const uri = process.env.MONGO_URI;
+const MongoClient = require("mongodb").MongoClient;
+const DB_NAME = "bug-tracker";
+const MONGO_OPTIONS = { useUnifiedTopology: true, useNewUrlParser: true };
+
 module.exports = () => {
+  const get = (collectionName, query = {}) => {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+        const db = client.db(DB_NAME);
+        const collection = db.collection(collectionName);
+        collection.find(query).toArray((err, docs) => {
+          resolve(docs);
+          client.close();
+        });
+      });
+    });
+  };
+
+  const add = (collectionName, item) => {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+        const db = client.db(DB_NAME);
+        const collection = db.collection(collectionName);
+
+        collection.insertOne(item, (err, result) => {
+          resolve(result);
+          client.close();
+        });
+      });
+    });
+  };
   const authors = [
     { id: 1, name: "William Gibson" },
     { id: 2, name: "Neil Stephenson" },
   ];
-  const projects = [
-    {
-      slug: "BOOK",
-      name: "Book Store",
-      description: "Place where books are sold",
-    },
-    {
-      slug: "BUG",
-      name: "Bug Tracker",
-      description: "System for keep track of reported bugs",
-    },
-  ];
-
-  const users = [
-    {
-      name: "Claudia Gonzalez",
-      email: "claudiagf_7@hotmail.com",
-      usertype: "admin",
-    },
-    {
-      name: "Dave Albert",
-      email: "dalbert@cct.ie",
-      usertype: "admin",
-    },
-    {
-      name: "Pedro McGowan",
-      email: "pedromcgowan@hotmail.com",
-      usertype: "user",
-    },
-  ];
 
   return {
     authors,
-    projects,
-    users,
+    get,
+    add,
   };
 };
