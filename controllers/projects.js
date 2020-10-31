@@ -5,7 +5,7 @@ module.exports = () => {
     res.json(await projects.get());
   };
 
-  const getById = async (req, res) => {
+  const getBySlug = async (req, res) => {
     res.json(await projects.get(req.params.slug));
   };
 
@@ -20,6 +20,6 @@ module.exports = () => {
   return {
     getController,
     postController,
-    getById,
+    getBySlug,
   };
 };

@@ -4,13 +4,15 @@ const COLLECTION = "projects";
 module.exports = () => {
   const get = async (slug = null) => {
     console.log("   inside projects model");
-    const projects = await db.get(COLLECTION);
-
+    // In case slug is null, all projects are given
     if (!slug) {
+      const projects = await db.get(COLLECTION);
       return projects;
     }
 
-    return projects;
+    //  In case slug is set, we pass by param
+    const project = await db.get(COLLECTION, { slug });
+    return project;
   };
 
   const add = async (slug, name, description) => {
