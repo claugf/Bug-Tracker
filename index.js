@@ -21,10 +21,21 @@ app.use((req, res, next) => {
 //adding body-parser instance as a middleware handler
 app.use(bodyParser.json());
 
+//  Setting root route
+app.get("/", (req, res) => {
+  res.json({
+    CBWA: "CA1",
+    studentName: "Claudia Gonzalez",
+    studentId: "2020085",
+  });
+});
+
 //  Get all projects
 app.get("/projects", projectsController.getController);
 //  Add a project
 app.post("/projects", projectsController.postController);
+//  Get all issues for a project
+app.get("/projects/:slug/issues", issuesController.populatedController);
 //  Get a project by slug
 app.get("/projects/:slug", projectsController.getBySlug);
 

@@ -47,8 +47,38 @@ module.exports = () => {
     }
   };
 
+  const aggregateWithProjects = async (slug) => {
+    //  Creating the query to filter by project
+    const LOOKUP_PROJECTS_PIPELINE = [
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project_id",
+          foreignField: "_id",
+          as: "p",
+        },
+      },
+      {
+        $match: { "p.slug": slug },
+      },
+      {
+        $project: {
+          issueNumber: 1,
+          title: 1,
+          description: 1,
+          project: {
+            $arrayElemAt: ["$p.slug", 0],
+          },
+        },
+      },
+    ];
+    const issues = await db.aggregate(COLLECTION, LOOKUP_PROJECTS_PIPELINE);
+    return issues;
+  };
+
   return {
     get,
     add,
+    aggregateWithProjects,
   };
 };
