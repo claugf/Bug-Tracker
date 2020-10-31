@@ -5,8 +5,8 @@ module.exports = () => {
     res.json(await issues.get());
   };
 
-  const getByNumber = async (req, res) => {
-    res.json(await issues.get(req.params.number));
+  const getByIssueNumber = async (req, res) => {
+    res.json(await issues.get(req.params.issueNumber));
   };
 
   const postController = async (req, res) => {
@@ -21,6 +21,6 @@ module.exports = () => {
   return {
     getController,
     postController,
-    getByNumber,
+    getByIssueNumber,
   };
 };

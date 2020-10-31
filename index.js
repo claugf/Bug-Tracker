@@ -40,7 +40,7 @@ app.get("/issues", issuesController.getController);
 //  Add an issue
 app.post("/issues", issuesController.postController);
 //  Get an issue by issueNumber
-app.get("/issues/:number", issuesController.getByNumber);
+app.get("/issues/:issueNumber", issuesController.getByIssueNumber);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

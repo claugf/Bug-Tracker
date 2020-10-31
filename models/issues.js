@@ -3,16 +3,16 @@ const COLLECTION = "issues";
 const COLLECTION_PARENT = "projects";
 
 module.exports = () => {
-  const get = async (number = null) => {
+  const get = async (issueNumber = null) => {
     console.log("   inside issues model");
     // In case number is null, all issues are given
-    if (!number) {
+    if (!issueNumber) {
       const issues = await db.get(COLLECTION);
       return issues;
     }
 
     //  In case number is set, we pass it by param
-    const issue = await db.get(COLLECTION, { number });
+    const issue = await db.get(COLLECTION, { issueNumber });
     return issue;
   };
 
