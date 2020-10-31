@@ -64,10 +64,31 @@ module.exports = () => {
     });
   };
 
+  const update = (collectionName, pipeline, item) => {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+        const db = client.db(DB_NAME);
+        const collection = db.collection(collectionName);
+        console.log("collection");
+        console.log(pipeline);
+        console.log(item);
+        collection.updateOne(pipeline, item, (err, result) => {
+          if (err) {
+            console.log(" --- update ERROR --- ");
+            console.log(err);
+          }
+          resolve(result);
+          client.close();
+        });
+      });
+    });
+  };
+
   return {
     get,
     add,
     count,
     aggregate,
+    update,
   };
 };

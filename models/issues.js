@@ -76,9 +76,98 @@ module.exports = () => {
     return issues;
   };
 
+  const getCommentsByIssue = async (issueNumber = null) => {
+    // In case number is null, all comments will be shown by Issue
+    if (!issueNumber) {
+      const COMMENTS_ISSUES_PIPELINE = [
+        {
+          $project: {
+            comments: 1,
+          },
+        },
+      ];
+      const issues = await db.aggregate(COLLECTION, COMMENTS_ISSUES_PIPELINE);
+      return issues;
+    }
+    // In case number is set, all comments of the selected Issue will be shown
+    const COMMENTS_ISSUE_PIPELINE = [
+      {
+        $match: { issueNumber: issueNumber },
+      },
+      {
+        $project: {
+          comments: 1,
+        },
+      },
+    ];
+    const issue = await db.aggregate(COLLECTION, COMMENTS_ISSUE_PIPELINE);
+    return issue;
+  };
+
+  const getAComment = async (issueNumber, index) => {
+    // In case number is set, all comments of the selected Issue will be shown
+    const COMMENT_PIPELINE = [
+      {
+        $match: { issueNumber: issueNumber },
+      },
+      {
+        $project: {
+          comment: {
+            $arrayElemAt: ["$comments.text", parseInt(index)],
+          },
+        },
+      },
+    ];
+    const issue = await db.aggregate(COLLECTION, COMMENT_PIPELINE);
+    return issue;
+  };
+
+  const addComment = async (issueNumber, text, author) => {
+    //    Firstly, search the project by slug
+    const issueFind = await getCommentsByIssue(issueNumber);
+    console.log(issueFind);
+
+    //  Checking if the project exists, to continue
+    if (Array.isArray(issueFind) && issueFind.length) {
+      //  Getting issues by Project
+      // const issuesProject = await db.get(COLLECTION, { project_id });
+      // const issuesCount = issuesProject.length;
+      const NEW_COMMENT_PIPELINE = [{ issueNumber: issueNumber }];
+      const NEW_COMMENT_ITEM = [
+        {
+          $push: {
+            comments: {
+              $each: [{ _id: 1, text: text, author: author }],
+            },
+          },
+        },
+      ];
+
+      console.log(text);
+      console.log(author);
+      console.log(NEW_COMMENT_PIPELINE);
+      //  Adding the comment
+      const comment = await db.update(
+        COLLECTION,
+        NEW_COMMENT_PIPELINE,
+        NEW_COMMENT_ITEM
+      );
+      return comment;
+    } else {
+      //  If the project does not exist, return error
+      return {
+        error:
+          "The issue does not exist in the database. Please add the issue first, then try again!",
+      };
+    }
+  };
+
   return {
     get,
     add,
     aggregateWithProjects,
+    getCommentsByIssue,
+    getAComment,
+    addComment,
   };
 };

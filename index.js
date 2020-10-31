@@ -53,6 +53,15 @@ app.get("/issues/:issueNumber", issuesController.getByIssueNumber);
 //  Get all issues for a project
 app.get("/projects/:slug/issues", issuesController.populatedController);
 
+//  Get all comments
+app.get("/comments", issuesController.getCommentsByIssues);
+//  Get all comments by issueNumber
+app.get("/issues/:issueNumber/comments", issuesController.getCommentsByIssue);
+//  Get a comment by issueNumber and index
+app.get("/issues/:issueNumber/comments/:index", issuesController.getAComment);
+//  Add a comment by issueNumber
+app.post("/issues/:issueNumber/comments", issuesController.postAddComment);
+
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
