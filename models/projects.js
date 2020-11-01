@@ -16,12 +16,20 @@ module.exports = () => {
   };
 
   const add = async (slug, name, description) => {
-    const results = await db.add(COLLECTION, {
-      slug: slug,
-      name: name,
-      description: description,
-    });
-    return results.result;
+    //  Getting projects by Slug
+    const projects = await get(slug);
+
+    //  Checking if the project already exists
+    if (projects.length === 0) {
+      const results = await db.add(COLLECTION, {
+        slug: slug,
+        name: name,
+        description: description,
+      });
+      return results.result;
+    }
+
+    return { error: "This project already exists in the database!" };
   };
 
   return {

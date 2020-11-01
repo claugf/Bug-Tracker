@@ -125,27 +125,29 @@ module.exports = () => {
   const addComment = async (issueNumber, text, author) => {
     //    Firstly, search the project by slug
     const issueFind = await getCommentsByIssue(issueNumber);
-    console.log(issueFind);
 
     //  Checking if the project exists, to continue
     if (Array.isArray(issueFind) && issueFind.length) {
-      //  Getting issues by Project
-      // const issuesProject = await db.get(COLLECTION, { project_id });
-      // const issuesCount = issuesProject.length;
-      const NEW_COMMENT_PIPELINE = [{ issueNumber: issueNumber }];
-      const NEW_COMMENT_ITEM = [
-        {
-          $push: {
-            comments: {
-              $each: [{ _id: 1, text: text, author: author }],
-            },
+      //  Counting comments in the issue
+      let commentsByIssue;
+      try {
+        //  If the issue have comments, it will count have many they are
+        commentsByIssue = issueFind[0].comments.length;
+      } catch (error) {
+        //  If the issue does not have comments, it will assign  zero
+        commentsByIssue = 0;
+      }
+
+      //  Setting pipeline and item
+      const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
+      const NEW_COMMENT_ITEM = {
+        $push: {
+          comments: {
+            $each: [{ _id: commentsByIssue + 1, text: text, author: author }],
           },
         },
-      ];
+      };
 
-      console.log(text);
-      console.log(author);
-      console.log(NEW_COMMENT_PIPELINE);
       //  Adding the comment
       const comment = await db.update(
         COLLECTION,
