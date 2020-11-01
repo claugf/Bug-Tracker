@@ -21,6 +21,33 @@ app.use((req, res, next) => {
 //adding body-parser instance as a middleware handler
 app.use(bodyParser.json());
 
+//  Implementing security
+app.use(async (req, res, next) => {
+  const FailedAuthMessage = {
+    error: "Failed Authentication",
+    message: "Go away!",
+    code: "xxx", // Some useful error code
+  };
+
+  const suppliedKey = req.headers["x-api-key"];
+  const mykey = "CBWA - CA1 - CLAUDIA";
+  const clientIp =
+    req.headers["x-forwarder-for"] || req.connection.remoteAddress;
+
+  //  Check Pre-shared key
+  if (suppliedKey !== mykey) {
+    console.log(
+      " [%s] FAILED AUTHENTICATION -- %s, No Key Supplied",
+      new Date(),
+      clientIp
+    );
+    FailedAuthMessage.code = "01";
+    return res.status(401).json(FailedAuthMessage);
+  }
+
+  next();
+});
+
 //  Setting root route
 app.get("/", (req, res) => {
   res.json({
