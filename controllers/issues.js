@@ -45,6 +45,13 @@ module.exports = () => {
     res.json(result);
   };
 
+  const updateStatus = async (req, res) => {
+    const issueNumber = req.params.issueNumber;
+    const status = req.params.status;
+    const result = await issues.updateStatus(issueNumber, status);
+    res.json(result);
+  };
+
   return {
     getController,
     postController,
@@ -54,5 +61,6 @@ module.exports = () => {
     getCommentsByIssue,
     getAComment,
     postAddComment,
+    updateStatus,
   };
 };

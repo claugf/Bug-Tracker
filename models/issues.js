@@ -164,6 +164,36 @@ module.exports = () => {
     }
   };
 
+  const updateStatus = async (issueNumber, status) => {
+    //    Firstly, search the project by slug
+    const issueFind = await getCommentsByIssue(issueNumber);
+
+    //  Checking if the project exists, to continue
+    if (Array.isArray(issueFind) && issueFind.length) {
+      //  Setting pipeline and item
+      const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
+      const NEW_COMMENT_ITEM = {
+        $set: {
+          status: status,
+        },
+      };
+
+      //  Adding the comment
+      const comment = await db.update(
+        COLLECTION,
+        NEW_COMMENT_PIPELINE,
+        NEW_COMMENT_ITEM
+      );
+      return comment;
+    } else {
+      //  If the project does not exist, return error
+      return {
+        error:
+          "The issue does not exist in the database. Please add the issue first, then try again!",
+      };
+    }
+  };
+
   return {
     get,
     add,
@@ -171,5 +201,6 @@ module.exports = () => {
     getCommentsByIssue,
     getAComment,
     addComment,
+    updateStatus,
   };
 };

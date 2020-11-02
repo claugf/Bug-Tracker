@@ -90,6 +90,11 @@ app.post("/projects/:slug/issues", issuesController.postController);
 app.get("/issues/:issueNumber", issuesController.getByIssueNumber);
 //  Get all issues for a project
 app.get("/projects/:slug/issues", issuesController.populatedController);
+//  Update status
+app.put(
+  "/projects/:slug/issues/:issueNumber/:status",
+  issuesController.updateStatus
+);
 
 //  Get all comments
 app.get("/comments", issuesController.getCommentsByIssues);
