@@ -20,7 +20,7 @@ module.exports = () => {
 
   return {
     getController,
-    postController,
     getByEmail,
+    postController,
   };
 };

@@ -4,6 +4,9 @@ const bodyParser = require("body-parser");
 const hostname = "0.0.0.0";
 const port = process.env.PORT || 3000;
 
+//  Setting models for security
+const users = require("./models/users")();
+
 //  Setting controllers
 const projectsController = require("./controllers/projects")();
 const usersController = require("./controllers/users")();
@@ -11,14 +14,14 @@ const issuesController = require("./controllers/issues")();
 
 const app = (module.exports = express());
 
-//logging
+//  Logging
 app.use((req, res, next) => {
   //Display log for requests
   console.log("[%s] %s -- %s", new Date(), req.method, req.url);
   next();
 });
 
-//adding body-parser instance as a middleware handler
+//  Adding body-parser instance as a middleware handler
 app.use(bodyParser.json());
 
 //  Implementing security
@@ -30,12 +33,10 @@ app.use(async (req, res, next) => {
   };
 
   const suppliedKey = req.headers["x-api-key"];
-  const mykey = "CBWA - CA1 - CLAUDIA";
   const clientIp =
     req.headers["x-forwarder-for"] || req.connection.remoteAddress;
-
   //  Check Pre-shared key
-  if (suppliedKey !== mykey) {
+  if (!suppliedKey) {
     console.log(
       " [%s] FAILED AUTHENTICATION -- %s, No Key Supplied",
       new Date(),
@@ -45,6 +46,16 @@ app.use(async (req, res, next) => {
     return res.status(401).json(FailedAuthMessage);
   }
 
+  const validKey = await users.verifyngHashKey(suppliedKey);
+  if (!validKey.isValid) {
+    console.log(
+      " [%s] FAILED AUTHENTICATION -- %s, Bad Key Supplied",
+      new Date(),
+      clientIp
+    );
+    FailedAuthMessage.code = "02";
+    return res.status(401).json(FailedAuthMessage);
+  }
   next();
 });
 
