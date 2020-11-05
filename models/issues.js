@@ -113,7 +113,7 @@ module.exports = () => {
       {
         $project: {
           comment: {
-            $arrayElemAt: ["$comments.text", parseInt(index)],
+            $arrayElemAt: ["$comments.text", parseInt(index - 1)],
           },
         },
       },
