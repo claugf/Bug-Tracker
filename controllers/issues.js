@@ -2,11 +2,19 @@ const issues = require("../models/issues.js")();
 
 module.exports = () => {
   const getController = async (req, res) => {
-    res.json(await issues.get());
+    const { issuesResult, error } = await issues.get();
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const getByIssueNumber = async (req, res) => {
-    res.json(await issues.get(req.params.issueNumber));
+    const { issuesResult, error } = await issues.get(req.params.issueNumber);
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const postController = async (req, res) => {
@@ -14,42 +22,86 @@ module.exports = () => {
     const description = req.body.description;
     const status = "open";
     const slug = req.params.slug;
-    const result = await issues.add(title, description, status, slug);
-    res.json(result);
+    const { issuesResult, error } = await issues.add(
+      title,
+      description,
+      status,
+      slug
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const populatedController = async (req, res) => {
-    const slug = req.params.slug;
-    res.json(await issues.aggregateWithProjects(slug));
+    //const slug = req.params.slug;
+    const { issuesResult, error } = await issues.aggregateWithProjects(
+      req.params.slug
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const getCommentsByIssues = async (req, res) => {
-    res.json(await issues.getCommentsByIssue());
+    const { issuesResult, error } = await issues.getCommentsByIssue();
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const getCommentsByIssue = async (req, res) => {
-    res.json(await issues.getCommentsByIssue(req.params.issueNumber));
+    const { issuesResult, error } = await issues.getCommentsByIssue(
+      req.params.issueNumber
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const getAComment = async (req, res) => {
     const issueNumber = req.params.issueNumber;
     const index = req.params.index;
-    res.json(await issues.getAComment(issueNumber, index));
+    const { issuesResult, error } = await issues.getAComment(
+      issueNumber,
+      index
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const postAddComment = async (req, res) => {
     const issueNumber = req.params.issueNumber;
     const text = req.body.text;
     const author = req.body.author;
-    const result = await issues.addComment(issueNumber, text, author);
-    res.json(result);
+    const { issuesResult, error } = await issues.addComment(
+      issueNumber,
+      text,
+      author
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   const updateStatus = async (req, res) => {
     const issueNumber = req.params.issueNumber;
     const status = req.params.status;
-    const result = await issues.updateStatus(issueNumber, status);
-    res.json(result);
+    const { issuesResult, error } = await issues.updateStatus(
+      issueNumber,
+      status
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
   };
 
   return {
