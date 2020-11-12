@@ -7,42 +7,81 @@ module.exports = () => {
     console.log("   inside issues model");
     // In case number is null, all issues are given
     if (!issueNumber) {
-      const issues = await db.get(COLLECTION);
-      return issues;
+      try {
+        const issues = await db.get(COLLECTION);
+        return { issuesResult: issues };
+      } catch (ex) {
+        console.log("-=-=-=-= Issues Get Error");
+        return { error: ex };
+      }
     }
 
     //  In case number is set, we pass it by param
-    const issue = await db.get(COLLECTION, { issueNumber });
-    return issue;
+    try {
+      const issue = await db.get(COLLECTION, { issueNumber });
+      return { issuesResult: issue };
+    } catch (ex) {
+      console.log("-=-=-=-= Issue Get Error");
+      return { error: ex };
+    }
   };
 
   const add = async (title, description, status, slug) => {
-    //    Firstly, search the project by slug
-    const projectFind = await db.get(COLLECTION_PARENT, { slug });
+    //  Ask for all the paramereters before add it
+    if (
+      title != null &&
+      description != null &&
+      status != null &&
+      slug != null
+    ) {
+      //    Firstly, search the project by slug
+      let projectFind;
+      try {
+        projectFind = await db.get(COLLECTION_PARENT, { slug });
+      } catch (ex) {
+        console.log("-=-=-=-= Issues Add/Get projectFind Error");
+        return { error: ex };
+      }
 
-    //  Checking if the project exists, to continue
-    if (Array.isArray(projectFind) && projectFind.length) {
-      //  Taking the project Id of the project found
-      const project_id = projectFind[0]._id;
+      //  Checking if the project exists, to continue
+      if (Array.isArray(projectFind) && projectFind.length) {
+        //  Taking the project Id of the project found
+        const project_id = projectFind[0]._id;
 
-      //  Getting issues by Project
-      const issuesProject = await db.get(COLLECTION, { project_id });
-      const issuesCount = issuesProject.length;
+        //  Getting issues by Project
+        let issuesCount;
+        try {
+          const issuesProject = await db.get(COLLECTION, { project_id });
+          issuesCount = issuesProject.length;
+        } catch {
+          console.log("-=-=-=-= Issues Add/Get issuesProject Error");
+          return { error: ex };
+        }
 
-      //  Adding the issue
-      const results = await db.add(COLLECTION, {
-        issueNumber: slug + "-" + (issuesCount + 1),
-        title: title,
-        description: description,
-        status: status,
-        project_id: project_id,
-      });
-      return results.result;
+        //  Adding the issue
+        try {
+          const results = await db.add(COLLECTION, {
+            issueNumber: slug + "-" + (issuesCount + 1),
+            title: title,
+            description: description,
+            status: status,
+            project_id: project_id,
+          });
+          return { issuesResult: results.result };
+        } catch (ex) {
+          console.log("-=-=-=-= Issue Add Error");
+          return { error: ex };
+        }
+      } else {
+        //  If the project does not exist, return error
+        return {
+          error:
+            "The project does not exist in the database. Please add the project first, then try again!",
+        };
+      }
     } else {
-      //  If the project does not exist, return error
       return {
-        error:
-          "The project does not exist in the database. Please add the project first, then try again!",
+        error: "Please fill out all required fields to add the issue!",
       };
     }
   };
@@ -66,14 +105,21 @@ module.exports = () => {
           issueNumber: 1,
           title: 1,
           description: 1,
+          status: 1,
           project: {
             $arrayElemAt: ["$p.slug", 0],
           },
         },
       },
     ];
-    const issues = await db.aggregate(COLLECTION, LOOKUP_PROJECTS_PIPELINE);
-    return issues;
+
+    try {
+      const issues = await db.aggregate(COLLECTION, LOOKUP_PROJECTS_PIPELINE);
+      return { issuesResult: issues };
+    } catch (ex) {
+      console.log("-=-=-=-= Issues Aggregate Error");
+      return { error: ex };
+    }
   };
 
   const getCommentsByIssue = async (issueNumber = null) => {
@@ -86,8 +132,13 @@ module.exports = () => {
           },
         },
       ];
-      const issues = await db.aggregate(COLLECTION, COMMENTS_ISSUES_PIPELINE);
-      return issues;
+      try {
+        const issues = await db.aggregate(COLLECTION, COMMENTS_ISSUES_PIPELINE);
+        return { issuesResult: issues };
+      } catch (ex) {
+        console.log("-=-=-=-= Issue GetComments Error");
+        return { error: ex };
+      }
     }
     // In case number is set, all comments of the selected Issue will be shown
     const COMMENTS_ISSUE_PIPELINE = [
@@ -100,8 +151,13 @@ module.exports = () => {
         },
       },
     ];
-    const issue = await db.aggregate(COLLECTION, COMMENTS_ISSUE_PIPELINE);
-    return issue;
+    try {
+      const issue = await db.aggregate(COLLECTION, COMMENTS_ISSUE_PIPELINE);
+      return { issuesResult: issue };
+    } catch (ex) {
+      console.log("-=-=-=-= Issue GetCommentsByIssue Error");
+      return { error: ex };
+    }
   };
 
   const getAComment = async (issueNumber, index) => {
@@ -118,73 +174,120 @@ module.exports = () => {
         },
       },
     ];
-    const issue = await db.aggregate(COLLECTION, COMMENT_PIPELINE);
-    return issue;
+    try {
+      const issue = await db.aggregate(COLLECTION, COMMENT_PIPELINE);
+      return { issuesResult: issue };
+    } catch (ex) {
+      console.log("-=-=-=-= Issue GetComment Error");
+      return { error: ex };
+    }
   };
 
   const addComment = async (issueNumber, text, author) => {
-    //    Firstly, search the project by slug
-    const issueFind = await getCommentsByIssue(issueNumber);
-
-    //  Checking if the project exists, to continue
-    if (Array.isArray(issueFind) && issueFind.length) {
-      //  Counting comments in the issue
-      let commentsByIssue;
+    //  Ask for all the paramereters before add it
+    if (issueNumber != null && text != null && author != null) {
+      //    Firstly, search the project by slug
+      let issueFind;
       try {
-        //  If the issue have comments, it will count have many they are
-        commentsByIssue = issueFind[0].comments.length;
-      } catch (error) {
-        //  If the issue does not have comments, it will assign  zero
-        commentsByIssue = 0;
+        issueFind = await getCommentsByIssue(issueNumber);
+      } catch (ex) {
+        console.log("-=-=-=-= Issue AddComment/GetComment Error");
+        return { error: ex };
       }
 
-      //  Setting pipeline and item
-      const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
-      const NEW_COMMENT_ITEM = {
-        $push: {
-          comments: {
-            $each: [{ _id: commentsByIssue + 1, text: text, author: author }],
-          },
-        },
-      };
+      //  Checking if the project exists, to continue
+      if (
+        Array.isArray(issueFind.issuesResult) &&
+        issueFind.issuesResult.length
+      ) {
+        //  Counting comments in the issue
+        let commentsByIssue;
+        try {
+          //  If the issue have comments, it will count have many they are
+          commentsByIssue = issueFind.issuesResult[0].comments.length;
+        } catch (error) {
+          //  If the issue does not have comments, it will assign  zero
+          commentsByIssue = 0;
+        }
 
-      //  Adding the comment
-      const comment = await db.update(
-        COLLECTION,
-        NEW_COMMENT_PIPELINE,
-        NEW_COMMENT_ITEM
-      );
-      return comment;
+        //  Setting pipeline and item
+        const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
+        const NEW_COMMENT_ITEM = {
+          $push: {
+            comments: {
+              $each: [{ _id: commentsByIssue + 1, text: text, author: author }],
+            },
+          },
+        };
+
+        //  Adding the comment
+        try {
+          const comment = await db.update(
+            COLLECTION,
+            NEW_COMMENT_PIPELINE,
+            NEW_COMMENT_ITEM
+          );
+          return { issuesResult: comment };
+        } catch (ex) {
+          console.log("-=-=-=-= Issue AddComment Error");
+          return { error: ex };
+        }
+      } else {
+        //  If the project does not exist, return error
+        return {
+          error:
+            "The issue does not exist in the database. Please add the issue first, then try again!",
+        };
+      }
     } else {
-      //  If the project does not exist, return error
       return {
-        error:
-          "The issue does not exist in the database. Please add the issue first, then try again!",
+        error: "Please fill out all required fields to add the comment!",
       };
     }
   };
 
   const updateStatus = async (issueNumber, status) => {
     //    Firstly, search the project by slug
-    const issueFind = await getCommentsByIssue(issueNumber);
+    let issueFind;
+    try {
+      issueFind = await getCommentsByIssue(issueNumber);
+    } catch (ex) {
+      console.log("-=-=-=-= Issue UpdateStatus/GetComment Error");
+      return { error: ex };
+    }
 
     //  Checking if the project exists, to continue
-    if (Array.isArray(issueFind) && issueFind.length) {
-      //  Setting pipeline and item
-      const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
-      const NEW_COMMENT_ITEM = {
-        $set: {
-          status: status,
-        },
-      };
+    if (
+      Array.isArray(issueFind.issuesResult) &&
+      issueFind.issuesResult.length
+    ) {
+      //  Ask for all the paramereters before add it
+      if (issueNumber != null && status != null) {
+        //  Setting pipeline and item
+        const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
+        const NEW_COMMENT_ITEM = {
+          $set: {
+            status: status,
+          },
+        };
 
-      //  Adding the comment
-      const comment = await db.update(
-        COLLECTION,
-        NEW_COMMENT_PIPELINE,
-        NEW_COMMENT_ITEM
-      );
-      return comment;
+        //  Adding the comment
+        try {
+          const comment = await db.update(
+            COLLECTION,
+            NEW_COMMENT_PIPELINE,
+            NEW_COMMENT_ITEM
+          );
+          return { issuesResult: comment };
+        } catch (ex) {
+          console.log("-=-=-=-= Issue UpdateStatus Error");
+          return { error: ex };
+        }
+      } else {
+        return {
+          error: "Please fill out all required fields to update the issue!",
+        };
+      }
     } else {
       //  If the project does not exist, return error
       return {
