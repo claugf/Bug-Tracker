@@ -68,24 +68,29 @@ module.exports = () => {
 
       //  Checking if the user already exists
       if (users.usersResult.length === 0) {
-        //  Hashing password
-        bcrypt.hash(key, saltRounds).then((hash) => {
-          console.log("here-------");
-          try {
-            console.log(hash);
-            //  Saving user with hashed password
-            const results = db.add(COLLECTION, {
-              name: name,
-              email: email,
-              usertype: usertype,
-              key: hash,
-            });
-            return { usersResult: results.result };
-          } catch (ex) {
-            console.log("-=-=-=-= User Add Error");
-            return { error: ex };
-          }
-        });
+        try {
+          let results = null;
+          //  Hashing password
+          await bcrypt.hash(key, saltRounds).then(async (hash) => {
+            try {
+              console.log(hash);
+              //  Saving user with hashed password
+              results = await db.add(COLLECTION, {
+                name: name,
+                email: email,
+                usertype: usertype,
+                key: hash,
+              });
+            } catch (ex) {
+              console.log("-=-=-=-= User Add Error");
+              return { error: ex };
+            }
+          });
+          return { usersResult: results.result };
+        } catch (ex) {
+          console.log("-=-=-=-= User Add/Bcrypt Error");
+          return { error: ex };
+        }
       } else {
         //  If we reach this point is because the user already exists
         return { error: "This user already exists in the database!" };
