@@ -26,6 +26,7 @@ app.use(bodyParser.json());
 
 //  Implementing security
 app.use(async (req, res, next) => {
+  return next();
   const FailedAuthMessage = {
     error: "Failed Authentication",
     message: "Go away!",
@@ -59,8 +60,30 @@ app.use(async (req, res, next) => {
   next();
 });
 
+//  Views
+const path = require("path");
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
 //  Setting root route
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  // try {
+  //   const { usersResult, error } = await usersController.getController(
+  //     req,
+  //     res
+  //   );
+  //   // console.log(usersResult);
+  //   res.render("index", { users: usersResult });
+  // } catch (ex) {
+  //   console.log(ex);
+  //   console.log("Begin here-----");
+  //   if (ex.response) {
+  //     console.log(ex.response.data);
+  //     console.log(ex.response.status);
+  //   } else {
+  //     console.log(ex.message);
+  //   }
+  // }
   res.json({
     CBWA: "CA1",
     studentName: "Claudia Gonzalez",
