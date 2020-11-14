@@ -11,7 +11,7 @@
 * [Contact](#contact)
 
 ## General info
-Through this application the user can register a project and the bugs or issues founded in such project. Within every issue founded, the user can add follow up comments about the issue. It is also possible to add more users, all password's users are hashed for security reasons. 
+> Through this application the user can register a project and the bugs or issues founded in such project. Within every issue founded, the user can add follow up comments about the issue. It is also possible to add more users, all password's users are hashed for security reasons. 
 
 ## Screenshots
 ![Example screenshot](./img/screenshot.png)
@@ -24,7 +24,8 @@ Through this application the user can register a project and the bugs or issues 
 * EJS - version 3.1
 
 ## Setup
-Describe how to install / setup your local environement / add link to demo version.
+Access the app throught the following link:
+**https://pure-ocean-21134.herokuapp.com/
 
 ## Code Examples
 Some examples of usage are:
@@ -34,6 +35,7 @@ $ {GET} `/users`
 * To get individual user:
 $ {GET} `/users/me@cbwa.com`
 * To add new user:
+```sh
 $ {POST}`/users`
 $ {
 $ `"name"`: `"McGregor"`,
@@ -41,6 +43,7 @@ $ `"email"`: `"McGregor@cbwa.com"`,
 $ `"usertype"`: `"user"`,
 $ `"key"`: `"new password"`
 $ }
+```
 ### Projects
 * To get all projects:
 {GET} `/projects`
@@ -73,11 +76,11 @@ $ }
 }`
 
 ## Changelog
-* October 2020 Created project for CBWA (_finished_)
-* November 2020 Error handling / Readme (_finished_)
-* November 2020 Frontend - Loggin/Users/Projects/Issues (_in progress_)
-* November 2020 Watchers who want updates of the projects/issues (_in progress_)
-* November 2020 Email notifications (_in progress_)
+* October 2020 Created project for CBWA _finished_
+* November 2020 Error handling / Readme _finished_)
+* November 2020 Frontend - Loggin/Users/Projects/Issues _in progress_
+* November 2020 Watchers who want updates of the projects/issues _in progress_
+* November 2020 Email notifications _in progress_
 
 ## Roadmap
 * December 2020 Frontend Watchers
