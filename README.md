@@ -68,17 +68,16 @@ $ }
 * To add new issue:
 {POST}`/projects/BOOKS/issues`
 `{
-`"title"`: `"Fix"`,
-`"description"`: `"That’s the third issue"`, 
+"title": "Fix",
+"description": "That’s the third issue", 
 }`
 
 ## Changelog
-Project is: _in progress_, _finished_, _no longer continue_ and why?
-* October 2020 Created project for CBWA
-* November 2020 Error handling / Readme
-* November 2020 Frontend - Loggin/Users/Projects/Issues
-* November 2020 Watchers were added backend
-* November 2020 Email notifications
+* October 2020 Created project for CBWA (_finished_)
+* November 2020 Error handling / Readme (_finished_)
+* November 2020 Frontend - Loggin/Users/Projects/Issues (_in progress_)
+* November 2020 Watchers who want updates of the projects/issues (_in progress_)
+* November 2020 Email notifications (_in progress_)
 
 ## Roadmap
 * December 2020 Frontend Watchers
