@@ -1,5 +1,5 @@
 # Bug-Tracker
-> This is a cloud web application project that help to keeping track of the bugs of a system or project. 
+> This is a cloud web application project that helps to keep track of the bugs of a system or project. 
 
 ## Table of contents
 * [General info](#general-info)
@@ -11,7 +11,7 @@
 * [Contact](#contact)
 
 ## General info
-> Through this application the user can register a project and the bugs or issues founded in such project. Within every issue founded, the user can add follow up comments about the issue. It is also possible to add more users, all password's users are hashed for security reasons. 
+> Through this application, the user can register a project and the bugs or issues founded in such project. Within every issue founded, the user can add follow up comments about the issue. It is also possible to add more users, all password's users are hashed for security reasons. 
 
 ## Screenshots
 ![Example screenshot](./img/screenshot.png)
@@ -24,8 +24,9 @@
 * EJS - version 3.1
 
 ## Setup
-Access the app throught the following link:
+Access the app through the following link:
 * https://pure-ocean-21134.herokuapp.com/
+Also, it can be accessed by Postman, copying the link above. 
 
 ## Code Examples
 Some examples of usage are:
@@ -53,7 +54,7 @@ Some examples of usage are:
 ```
 {GET} /projects
 ```
-* To get individual project:
+* To get an individual project:
 ```
 {GET} /projects/{SLUG}
 ```
@@ -63,7 +64,7 @@ Some examples of usage are:
 {
  "slug": "NEW",
  "name": "Brand new project",
- "description": "this is a new project" 
+ "description": "This is a new project" 
 }
 ```
 ### Issues
