@@ -30,24 +30,24 @@ Describe how to install / setup your local environement / add link to demo versi
 ## Code Examples
 Some examples of usage are:
 ### Users
-To get all users:
+* To get all users:
 {GET} `/users`
-To get individual user:
+* To get individual user:
 {GET} `/users/me@cbwa.com`
-To add new user:
+* To add new user:
 {POST}`/users`
 {
 `"name"`: `"McGregor"`,
 `"email"`: `"McGregor@cbwa.com"`, 
 `"usertype"`: `"user"`,
-`"key"`: `"new password"
+`"key"`: `"new password"`
 }
 ### Projects
-To get all projects:
+* To get all projects:
 {GET} `/projects`
-To get individual project:
+* To get individual project:
 {GET} `/projects/{SLUG}`
-To add new project:
+* To add new project:
 {POST}`/projects`
 {
 `"slug"`: `"NEW"`,
@@ -55,18 +55,18 @@ To add new project:
 `"description"`: `"this is a new project"` 
 }
 ### Issues
-To get all issues:
+* To get all issues:
 {GET} `/issues`
-To get individual issue:
+* To get individual issue:
 {GET} `/issues/BOOKS-1`
-To get all issues for a project:
+* To get all issues for a project:
 {GET} `/projects/BOOKS/issues`
-To update status of a issue:
+* To update status of a issue:
 {PUT} `/projects/BOOKS/issues/BOOKS-2/open`
 {PUT} `/projects/BOOKS/issues/BOOKS-2/wip` 
 {PUT} `/projects/BOOKS/issues/BOOKS-2/blocked` 
 {PUT} `/projects/BOOKS/issues/BOOKS-2/closed`
-To add new issue:
+* To add new issue:
 {POST}`/projects/BOOKS/issues`
 {
 `"title"`: `"Fix"`,
