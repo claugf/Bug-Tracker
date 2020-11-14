@@ -6,7 +6,6 @@
 * [Screenshots](#screenshots)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Features](#features)
 * [Changelog](#changelog)
 * [Roadmap](#roadmap)
 * [Contact](#contact)
@@ -31,17 +30,17 @@ Describe how to install / setup your local environement / add link to demo versi
 Some examples of usage are:
 ### Users
 * To get all users:
-{GET} `/users`
+$ {GET} `/users`
 * To get individual user:
-{GET} `/users/me@cbwa.com`
+$ {GET} `/users/me@cbwa.com`
 * To add new user:
-{POST}`/users`
-{
-`"name"`: `"McGregor"`,
-`"email"`: `"McGregor@cbwa.com"`, 
-`"usertype"`: `"user"`,
-`"key"`: `"new password"`
-}
+$ {POST}`/users`
+$ {
+$ `"name"`: `"McGregor"`,
+$ `"email"`: `"McGregor@cbwa.com"`, 
+$ `"usertype"`: `"user"`,
+$ `"key"`: `"new password"`
+$ }
 ### Projects
 * To get all projects:
 {GET} `/projects`
@@ -73,21 +72,17 @@ Some examples of usage are:
 `"description"`: `"That’s the third issue"`, 
 }
 
-## Features
-List of features ready and TODOs for future development
-* Awesome feature 1
-* Awesome feature 2
-* Awesome feature 3
-
-To-do list:
-* Wow improvement to be done 1
-* Wow improvement to be done 2
-
 ## Changelog
 Project is: _in progress_, _finished_, _no longer continue_ and why?
+* October 2020 Created project for CBWA
+* November 2020 Error handling / Readme
+* November 2020 Frontend - Loggin/Users/Projects/Issues
+* November 2020 Watchers were added backend
+* November 2020 Email notifications
 
 ## Roadmap
-Add here credits. Project inspired by..., based on...
+* December 2020 Frontend Watchers
+* December 2020 Unit Testing
 
 ## Contact
-Created by [@claugf](claudiagf_7@hotmail.com) - feel free to contact me!
+Created by [@claugf] - feel free to contact me!
