@@ -25,24 +25,28 @@
 
 ## Setup
 Access the app throught the following link:
-**https://pure-ocean-21134.herokuapp.com/
+* https://pure-ocean-21134.herokuapp.com/
 
 ## Code Examples
 Some examples of usage are:
 ### Users
 * To get all users:
+```
 $ {GET} `/users`
+```
 * To get individual user:
+```
 $ {GET} `/users/me@cbwa.com`
+```
 * To add new user:
 ```sh
-$ {POST}`/users`
-$ {
-$ `"name"`: `"McGregor"`,
-$ `"email"`: `"McGregor@cbwa.com"`, 
-$ `"usertype"`: `"user"`,
-$ `"key"`: `"new password"`
-$ }
+ {POST}`/users`
+ {
+ `"name"`: `"McGregor"`,
+ `"email"`: `"McGregor@cbwa.com"`, 
+ `"usertype"`: `"user"`,
+ `"key"`: `"new password"`
+ }
 ```
 ### Projects
 * To get all projects:
@@ -76,11 +80,11 @@ $ }
 }`
 
 ## Changelog
-* October 2020 Created project for CBWA _finished_
-* November 2020 Error handling / Readme _finished_)
-* November 2020 Frontend - Loggin/Users/Projects/Issues _in progress_
-* November 2020 Watchers who want updates of the projects/issues _in progress_
-* November 2020 Email notifications _in progress_
+* October 2020 Created project for CBWA - _finished_
+* November 2020 Error handling / Readme - _finished_
+* November 2020 Frontend - Loggin/Users/Projects/Issues - _in progress_
+* November 2020 Watchers who want updates of the projects/issues - _in progress_
+* November 2020 Email notifications - _in progress_
 
 ## Roadmap
 * December 2020 Frontend Watchers
