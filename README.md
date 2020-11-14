@@ -67,10 +67,10 @@ $ }
 {PUT} `/projects/BOOKS/issues/BOOKS-2/closed`
 * To add new issue:
 {POST}`/projects/BOOKS/issues`
-{
+`{
 `"title"`: `"Fix"`,
 `"description"`: `"That’s the third issue"`, 
-}
+}`
 
 ## Changelog
 Project is: _in progress_, _finished_, _no longer continue_ and why?
@@ -85,4 +85,4 @@ Project is: _in progress_, _finished_, _no longer continue_ and why?
 * December 2020 Unit Testing
 
 ## Contact
-Created by [@claugf] - feel free to contact me!
+Created by [@claugf](mailto:claudiagf_7@hotmail.com) - feel free to contact me!
