@@ -32,52 +32,68 @@ Some examples of usage are:
 ### Users
 * To get all users:
 ```
-$ {GET} `/users`
+$ {GET} /users
 ```
 * To get individual user:
 ```
-$ {GET} `/users/me@cbwa.com`
+$ {GET} /users/me@cbwa.com
 ```
 * To add new user:
-```sh
- {POST}`/users`
- {
- `"name"`: `"McGregor"`,
- `"email"`: `"McGregor@cbwa.com"`, 
- `"usertype"`: `"user"`,
- `"key"`: `"new password"`
- }
+```
+ {POST} /users
+{
+  "name": "McGregor",
+  "email": "McGregor@cbwa.com", 
+  "usertype": "user",
+  "key": "new password"
+}
 ```
 ### Projects
 * To get all projects:
-{GET} `/projects`
+```
+{GET} /projects
+```
 * To get individual project:
-{GET} `/projects/{SLUG}`
+```
+{GET} /projects/{SLUG}
+```
 * To add new project:
-{POST}`/projects`
+```
+{POST} /projects
 {
-`"slug"`: `"NEW"`,
-`"name"`: `"Brand new project"`,
-`"description"`: `"this is a new project"` 
+ "slug": "NEW",
+ "name": "Brand new project",
+ "description": "this is a new project" 
 }
+```
 ### Issues
 * To get all issues:
-{GET} `/issues`
+```
+{GET} /issues
+```
 * To get individual issue:
-{GET} `/issues/BOOKS-1`
+```
+{GET} /issues/BOOKS-1
+```
 * To get all issues for a project:
-{GET} `/projects/BOOKS/issues`
+```
+{GET} /projects/BOOKS/issues
+```
 * To update status of a issue:
-{PUT} `/projects/BOOKS/issues/BOOKS-2/open`
-{PUT} `/projects/BOOKS/issues/BOOKS-2/wip` 
-{PUT} `/projects/BOOKS/issues/BOOKS-2/blocked` 
-{PUT} `/projects/BOOKS/issues/BOOKS-2/closed`
+```
+{PUT} /projects/BOOKS/issues/BOOKS-2/open
+{PUT} /projects/BOOKS/issues/BOOKS-2/wip 
+{PUT} /projects/BOOKS/issues/BOOKS-2/blocked 
+{PUT} /projects/BOOKS/issues/BOOKS-2/closed
+```
 * To add new issue:
-{POST}`/projects/BOOKS/issues`
-`{
-"title": "Fix",
-"description": "That’s the third issue", 
-}`
+```
+{POST} /projects/BOOKS/issues
+{
+ "title": "Fix",
+ "description": "That’s the third issue", 
+}
+```
 
 ## Changelog
 * October 2020 Created project for CBWA - _finished_
