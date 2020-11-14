@@ -32,11 +32,11 @@ Some examples of usage are:
 ### Users
 * To get all users:
 ```
-$ {GET} /users
+{GET} /users
 ```
 * To get individual user:
 ```
-$ {GET} /users/me@cbwa.com
+{GET} /users/me@cbwa.com
 ```
 * To add new user:
 ```
@@ -92,6 +92,27 @@ $ {GET} /users/me@cbwa.com
 {
  "title": "Fix",
  "description": "That’s the third issue", 
+}
+```
+### Comments
+* To get all comments:
+```
+{GET} /comments
+```
+* To get all comments for an issue:
+```
+{GET} /issues/BOOK-1/comments
+```
+* To get individual comment for an issue:
+```
+{GET} /issues/BOOK-1/comments/1
+```
+* To add new comment for an issue:
+```
+{POST} /issues/BOOK-1/comments
+{
+ "text": "X screen does not show Y results",
+ "author": "clau@cbwa.com", 
 }
 ```
 
