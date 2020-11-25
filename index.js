@@ -74,42 +74,6 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/", require("./routes/index"));
 app.use("/users", require("./routes/users"));
 
-//  Implementing security
-app.use(async (req, res, next) => {
-  return next();
-  const FailedAuthMessage = {
-    error: "Failed Authentication",
-    message: "Go away!",
-    code: "xxx", // Some useful error code
-  };
-
-  const suppliedKey = req.headers["x-api-key"];
-  const clientIp =
-    req.headers["x-forwarder-for"] || req.connection.remoteAddress;
-  //  Check Pre-shared key
-  if (!suppliedKey) {
-    console.log(
-      " [%s] FAILED AUTHENTICATION -- %s, No Key Supplied",
-      new Date(),
-      clientIp
-    );
-    FailedAuthMessage.code = "01";
-    return res.status(401).json(FailedAuthMessage);
-  }
-
-  const validKey = await users.verifyngHashKey(suppliedKey);
-  if (!validKey.isValid) {
-    console.log(
-      " [%s] FAILED AUTHENTICATION -- %s, Bad Key Supplied",
-      new Date(),
-      clientIp
-    );
-    FailedAuthMessage.code = "02";
-    return res.status(401).json(FailedAuthMessage);
-  }
-  next();
-});
-
 app.post("/CORREO", (req, res) => {
   const email = `
   <p>You have a new email from your app love</p>
