@@ -14,7 +14,7 @@
 > Through this application, the user can register a project and the bugs or issues founded in such project. Within every issue founded, the user can add follow up comments about the issue. It is also possible to add more users, all password's users are hashed for security reasons. 
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
+![Example screenshot](./public/img/screenshot.png)
 
 ## Technologies
 * Express - version 4.17
@@ -22,6 +22,10 @@
 * MongoDB - version 3.6
 * Bcrypt - version 5.0
 * EJS - version 3.1
+* Express-ejs-layouts - version 2.5
+* Express-session - version 1.17
+* Nodemailer - version 6.4
+* Passport - version 0.4
 
 ## Setup
 Access the app through the following link:
@@ -121,12 +125,13 @@ Some examples of usage are:
 ## Changelog
 * October 2020 Created project for CBWA - _finished_
 * November 2020 Error handling / Readme - _finished_
-* November 2020 Frontend - Loggin/Users/Projects/Issues - _in progress_
-* November 2020 Watchers who want updates of the projects/issues - _in progress_
-* November 2020 Email notifications - _in progress_
+* November 2020 Frontend - Loggin/Register/Projects/Issues - _finished_
+* November 2020 Watchers who want updates of the projects/issues - _finished_
+* November 2020 Email notifications - _finished_
 
 ## Roadmap
 * December 2020 Frontend Watchers
+* December 2020 Docker-ise application
 * December 2020 Unit Testing
 
 ## Contact
