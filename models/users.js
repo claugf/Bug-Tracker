@@ -1,6 +1,7 @@
 const db = require("../db.js")();
 const COLLECTION = "users"; //  For DB
 const bcrypt = require("bcrypt"); //  Library for hashing password
+const { use } = require("passport");
 //const { use } = require("../index.js");
 const saltRounds = 10;
 
@@ -50,6 +51,37 @@ module.exports = () => {
       return { isValid: a };
     } catch (ex) {
       console.log("-=-=-=-= Users bcrypt Error");
+      return { error: ex };
+    }
+  };
+
+  const verifyngUser = async (email, key) => {
+    console.log(email);
+    console.log(key);
+    //  Getting user, by email
+    let user;
+    try {
+      user = await get(email);
+      if (user.usersResult.length > 0) {
+        console.log(" User Found");
+        //  Compare if the user key is the same that is provided
+        try {
+          const a = await bcrypt
+            .compare(key, user.usersResult[0].key)
+            .then((result) => {
+              return result;
+            });
+          return { isValid: a };
+        } catch (ex) {
+          console.log("-=-=-=-= Users bcrypt Error");
+          return { error: ex };
+        }
+      } else {
+        console.log("No User Found");
+        return { error: "The email is not registered in the database" };
+      }
+    } catch (ex) {
+      console.log("-=-=-=-= Users verifyngUser Error");
       return { error: ex };
     }
   };
@@ -106,5 +138,6 @@ module.exports = () => {
     get,
     add,
     verifyngHashKey,
+    verifyngUser,
   };
 };
