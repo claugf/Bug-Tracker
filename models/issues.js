@@ -1,6 +1,7 @@
 const db = require("../db.js")();
 const COLLECTION = "issues";
 const COLLECTION_PARENT = "projects";
+const nodemailer = require("nodemailer");
 
 module.exports = () => {
   const get = async (issueNumber = null) => {
@@ -227,6 +228,16 @@ module.exports = () => {
             NEW_COMMENT_PIPELINE,
             NEW_COMMENT_ITEM
           );
+
+          // Sending Email
+          const emailBody = `
+          <p>You have a new email from Bug-Tracker App</p>
+          <h2>${issueNumber}</h2>
+          <p> An comment was added by ${author}</p>
+          <p>${text}</p>
+          `;
+          const receivers = "claudiagf_7@hotmail.com, ing.gonzalez@outlook.com";
+          await sendEmail(emailBody, receivers);
           return { issuesResult: comment };
         } catch (ex) {
           console.log("-=-=-=-= Issue AddComment Error");
@@ -242,6 +253,88 @@ module.exports = () => {
     } else {
       return {
         error: "Please fill out all required fields to add the comment!",
+      };
+    }
+  };
+
+  const sendEmail = async (emailBody, receivers) => {
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "claudia.cbwa@gmail.com",
+        pass: "CBWA2020",
+      },
+    });
+
+    const mailOptions = {
+      from: "claudia.cbwa@gmail.com", // sender address
+      to: receivers, // list of receivers
+      subject: "Bug-Tracker App Notification", // Subject line
+      html: emailBody, //'<h1>this is a test mail.</h1>'// plain text body
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+      if (err) console.log(err);
+      else console.log(info);
+      console.log("Message sent: %s", info.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+      // Preview only available when sending through an Ethereal account
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    });
+  };
+
+  const addWatcher = async (issueNumber, watcher) => {
+    //  Ask for all the paramereters before add it
+    if (issueNumber != null && watcher != null) {
+      //    Firstly, search the project by slug
+      let issueFind;
+      try {
+        issueFind = await getCommentsByIssue(issueNumber);
+      } catch (ex) {
+        console.log("-=-=-=-= Issue addWatcher/GetComment Error");
+        return { error: ex };
+      }
+
+      //  Checking if the project exists, to continue
+      if (
+        Array.isArray(issueFind.issuesResult) &&
+        issueFind.issuesResult.length
+      ) {
+        //  Setting pipeline and item
+        const NEW_COMMENT_PIPELINE = { issueNumber: issueNumber };
+        const NEW_COMMENT_ITEM = {
+          $push: {
+            watchers: {
+              $each: [{ watcher: watcher }],
+            },
+          },
+        };
+
+        //  Adding the comment
+        try {
+          const comment = await db.update(
+            COLLECTION,
+            NEW_COMMENT_PIPELINE,
+            NEW_COMMENT_ITEM
+          );
+          return { issuesResult: comment };
+        } catch (ex) {
+          console.log("-=-=-=-= Issue addWatcher Error");
+          return { error: ex };
+        }
+      } else {
+        //  If the project does not exist, return error
+        return {
+          error:
+            "The issue does not exist in the database. Please add the issue first, then try again!",
+        };
+      }
+    } else {
+      return {
+        error: "Please fill out all required fields to add the watcher!",
       };
     }
   };
@@ -304,6 +397,7 @@ module.exports = () => {
     getCommentsByIssue,
     getAComment,
     addComment,
+    addWatcher,
     updateStatus,
   };
 };

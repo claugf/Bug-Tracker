@@ -91,6 +91,19 @@ module.exports = () => {
     res.json({ issues: issuesResult });
   };
 
+  const postAddWatcher = async (req, res) => {
+    const issueNumber = req.params.issueNumber;
+    const watcher = req.params.watcher;
+    const { issuesResult, error } = await issues.addWatcher(
+      issueNumber,
+      watcher
+    );
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.json({ issues: issuesResult });
+  };
+
   const updateStatus = async (req, res) => {
     const issueNumber = req.params.issueNumber;
     const status = req.params.status;
@@ -113,6 +126,7 @@ module.exports = () => {
     getCommentsByIssue,
     getAComment,
     postAddComment,
+    postAddWatcher,
     updateStatus,
   };
 };

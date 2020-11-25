@@ -177,6 +177,13 @@ app.post(
   issuesController.postAddComment
 );
 
+//  Add a watcher by issueNumber
+app.post(
+  "/issues/:issueNumber/watcher/:watcher",
+  postmanAuthentication,
+  issuesController.postAddWatcher
+);
+
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
