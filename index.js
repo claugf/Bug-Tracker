@@ -133,7 +133,7 @@ app.post(
   postmanAuthentication,
   issuesController.postController
 );
-//  Get an issue by issueNumber
+//  Get an issue by issueNumber123
 app.get(
   "/issues/:issueNumber",
   postmanAuthentication,
