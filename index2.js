@@ -1,18 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const expressLayouts = require("express-ejs-layouts");
-const flash = require("connect-flash");
-const session = require("express-session");
+const exphbs = require("express-handlebars");
 const nodemailer = require("nodemailer");
 const path = require("path");
-const passport = require("passport");
 
 const hostname = "0.0.0.0";
 const port = process.env.PORT || 3000;
 
 //  Setting models for security
 const users = require("./models/users")();
-const { postmanAuthentication } = require("./config/auth");
 
 //  Setting controllers
 const projectsController = require("./controllers/projects")();
@@ -21,13 +17,6 @@ const issuesController = require("./controllers/issues")();
 
 const app = (module.exports = express());
 
-//  Passport config
-require("./config/passport")(passport);
-//  ----------------------  DISCLAIMER  ----------------------
-//  All related to authentication(login/register) was inspired/guided by this video:
-//  https://www.youtube.com/watch?v=6FOq4cUdH8k
-//  However, the code was used according our needs
-
 //  Logging
 app.use((req, res, next) => {
   //Display log for requests
@@ -35,44 +24,9 @@ app.use((req, res, next) => {
   next();
 });
 
-//  EJS
-app.use(expressLayouts);
-app.set("view engine", "ejs");
-
 //  Adding body-parser instance as a middleware handler
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-//  Express Session
-app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
-
-//  Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Connect flash
-app.use(flash());
-
-//  Global Vars
-app.use((req, res, next) => {
-  res.locals.success_msg = req.flash("success_msg");
-  res.locals.error_msg = req.flash("error_msg");
-  res.locals.error = req.flash("error");
-  next();
-});
-
-//  Static folder
-app.use("/public", express.static(path.join(__dirname, "public")));
-
-//  Routes
-app.use("/", require("./routes/index"));
-app.use("/users", require("./routes/users"));
 
 //  Implementing security
 app.use(async (req, res, next) => {
@@ -107,6 +61,62 @@ app.use(async (req, res, next) => {
     FailedAuthMessage.code = "02";
     return res.status(401).json(FailedAuthMessage);
   }
+  next();
+});
+
+//  View engine setup
+// app.set("views", path.join(__dirname, "views"));
+app.engine("hbs", exphbs());
+app.set("view engine", "hbs");
+
+//  Static folder
+app.use("/public", express.static(path.join(__dirname, "public")));
+
+//  Setting root route
+app.get("/", async (req, res) => {
+  //  Redirect to index.hbs
+  res.render("index", { layout: false });
+
+  // res.json({
+  //   CBWA: "CA2",
+  //   studentName: "Claudia Gonzalez",
+  //   studentId: "2020085",
+  // });
+});
+
+app.post("/login", async (req, res, next) => {
+  // const FailedAuthMessage = {
+  //   error: "Failed Authentication",
+  //   message: "Go away!",
+  //   code: "xxx", // Some useful error code
+  // };
+
+  const username = req.body.username;
+  const password = req.body.password;
+  const clientIp =
+    req.headers["x-forwarder-for"] || req.connection.remoteAddress;
+  //  Check Pre-shared key
+  if (!suppliedKey) {
+    console.log(
+      " [%s] FAILED AUTHENTICATION -- %s, No Key Supplied",
+      new Date(),
+      clientIp
+    );
+    FailedAuthMessage.code = "01";
+    return res.status(401).json(FailedAuthMessage);
+  }
+
+  // const validKey = await users.verifyngHashKey(suppliedKey);
+  // if (!validKey.isValid) {
+  //   console.log(
+  //     " [%s] FAILED AUTHENTICATION -- %s, Bad Key Supplied",
+  //     new Date(),
+  //     clientIp
+  //   );
+  //   FailedAuthMessage.code = "02";
+  //   return res.status(401).json(FailedAuthMessage);
+  // }
+  console.log(req.body);
   next();
 });
 
@@ -148,70 +158,41 @@ app.post("/CORREO", (req, res) => {
 });
 
 //  Get all projects
-app.get("/projects", postmanAuthentication, projectsController.getController);
+app.get("/projects", projectsController.getController);
 //  Add a project
-app.post("/projects", postmanAuthentication, projectsController.postController);
+app.post("/projects", projectsController.postController);
 //  Get a project by slug
-app.get("/projects/:slug", postmanAuthentication, projectsController.getBySlug);
+app.get("/projects/:slug", projectsController.getBySlug);
 
 //  Get all users
-app.get("/users", postmanAuthentication, usersController.getController);
+app.get("/users", usersController.getController);
 //  Add an user
-app.post("/users", postmanAuthentication, usersController.postController);
+app.post("/users", usersController.postController);
 //  Get an user by Email
-app.get("/users/:email", postmanAuthentication, usersController.getByEmail);
+app.get("/users/:email", usersController.getByEmail);
 
 //  Get all issues
-app.get("/issues", postmanAuthentication, issuesController.getController);
+app.get("/issues", issuesController.getController);
 //  Add an issue
-app.post(
-  "/projects/:slug/issues",
-  postmanAuthentication,
-  issuesController.postController
-);
+app.post("/projects/:slug/issues", issuesController.postController);
 //  Get an issue by issueNumber
-app.get(
-  "/issues/:issueNumber",
-  postmanAuthentication,
-  issuesController.getByIssueNumber
-);
+app.get("/issues/:issueNumber", issuesController.getByIssueNumber);
 //  Get all issues for a project
-app.get(
-  "/projects/:slug/issues",
-  postmanAuthentication,
-  issuesController.populatedController
-);
+app.get("/projects/:slug/issues", issuesController.populatedController);
 //  Update status
 app.put(
   "/projects/:slug/issues/:issueNumber/:status",
-  postmanAuthentication,
   issuesController.updateStatus
 );
 
 //  Get all comments
-app.get(
-  "/comments",
-  postmanAuthentication,
-  issuesController.getCommentsByIssues
-);
+app.get("/comments", issuesController.getCommentsByIssues);
 //  Get all comments by issueNumber
-app.get(
-  "/issues/:issueNumber/comments",
-  postmanAuthentication,
-  issuesController.getCommentsByIssue
-);
+app.get("/issues/:issueNumber/comments", issuesController.getCommentsByIssue);
 //  Get a comment by issueNumber and index
-app.get(
-  "/issues/:issueNumber/comments/:index",
-  postmanAuthentication,
-  issuesController.getAComment
-);
+app.get("/issues/:issueNumber/comments/:index", issuesController.getAComment);
 //  Add a comment by issueNumber
-app.post(
-  "/issues/:issueNumber/comments",
-  postmanAuthentication,
-  issuesController.postAddComment
-);
+app.post("/issues/:issueNumber/comments", issuesController.postAddComment);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

@@ -28,10 +28,24 @@ module.exports = () => {
     }
     res.json({ users: usersResult });
   };
+  const postControllerbyView = async (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    //  It sets "user" as default usertype when the user is registered by the user' view
+    const usertype = "user";
+    const key = req.body.password;
+    const { usersResult, error } = await users.add(name, email, usertype, key);
+    if (error) {
+      return { error };
+    } else {
+      return { usersResult };
+    }
+  };
 
   return {
     getController,
     getByEmail,
     postController,
+    postControllerbyView,
   };
 };
