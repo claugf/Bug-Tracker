@@ -18,7 +18,7 @@
 
 ## Screenshots
 
-![Example screenshot](./public/img/screenshot.png)
+![Example screenshot](./public/img/Screenshot.png)
 
 ## Technologies
 
