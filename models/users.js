@@ -56,14 +56,12 @@ module.exports = () => {
   };
 
   const verifyngUser = async (email, key) => {
-    console.log(email);
-    console.log(key);
     //  Getting user, by email
     let user;
     try {
       user = await get(email);
+      //  If the user is found
       if (user.usersResult.length > 0) {
-        console.log(" User Found");
         //  Compare if the user key is the same that is provided
         try {
           const a = await bcrypt
@@ -77,7 +75,7 @@ module.exports = () => {
           return { error: ex };
         }
       } else {
-        console.log("No User Found");
+        //  If the user is not found
         return { error: "The email is not registered in the database" };
       }
     } catch (ex) {

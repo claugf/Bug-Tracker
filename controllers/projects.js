@@ -9,6 +9,15 @@ module.exports = () => {
     res.json({ projects: projectsResult });
   };
 
+  const getProjectsbyView = async (req, res) => {
+    const { projectsResult, error } = await projects.get();
+    if (error) {
+      return { error };
+    } else {
+      return { projectsResult };
+    }
+  };
+
   const getBySlug = async (req, res) => {
     const { projectsResult, error } = await projects.get(req.params.slug);
     if (error) {
@@ -34,6 +43,7 @@ module.exports = () => {
 
   return {
     getController,
+    getProjectsbyView,
     postController,
     getBySlug,
   };
