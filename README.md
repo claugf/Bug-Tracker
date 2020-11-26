@@ -18,7 +18,11 @@
 
 ## Screenshots
 
-![Example screenshot](./public/img/Screenshot.png)
+![Welcome Page](./public/img/Welcome.png)
+![Login](./public/img/Login.png)
+![Register](./public/img/Register.png)
+![Dashboard](./public/img/Dashboard.png)
+![Postman](./public/img/Postman.png)
 
 ## Technologies
 
