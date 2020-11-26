@@ -168,33 +168,27 @@ Some examples of usage are:
 }
 ```
 
-## Changelog
+### Watchers
 
-<<<<<<< HEAD
+- To add a watcher:
+
+```
+{POST} /issues/BOOK-1/watcher/claudia@cbwa.ie
+```
+
+## Changelog
 
 - October 2020 Created project for CBWA - _finished_
 - November 2020 Error handling / Readme - _finished_
-- November 2020 Frontend - Loggin/Register/Projects/Issues - _finished_
-- November 2020 Watchers who want updates of the projects/issues - _finished_
+- November 2020 Frontend - Loggin/Register/Projects - _finished_
+- November 2020 Watchers who want updates of the issues - _finished_
 - November 2020 Email notifications - _finished_
 
 ## Roadmap
 
 - December 2020 Frontend Watchers
 - December 2020 Docker-ise application
-- # December 2020 Unit Testing
-
-* October 2020 Created project for CBWA - _finished_
-* November 2020 Error handling / Readme - _finished_
-* November 2020 Frontend - Loggin/Users/Projects/Issues - _in progress_
-* November 2020 Watchers who want updates of the projects/issues - _in progress_
-* November 2020 Email notifications - _in progress_
-
-## Roadmap
-
-- December 2020 Frontend Watchers
 - December 2020 Unit Testing
-  > > > > > > > Watchers
 
 ## Contact
 
