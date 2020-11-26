@@ -229,15 +229,21 @@ module.exports = () => {
             NEW_COMMENT_ITEM
           );
 
-          // Sending Email
-          const emailBody = `
-          <p>You have a new email from Bug-Tracker App</p>
-          <h2>${issueNumber}</h2>
-          <p> An comment was added by ${author}</p>
-          <p>${text}</p>
-          `;
-          const receivers = "claudiagf_7@hotmail.com, ing.gonzalez@outlook.com";
-          await sendEmail(emailBody, receivers);
+          //  Prepare list of receivers/watchers
+          const receivers = await getReceivers(issueNumber);
+          //  If there are watchers, it proceeds to send emails
+          if (receivers.receivers != "") {
+            //  Prepare body of the email
+            const emailBody = `
+            <p>You have a new email from Bug-Tracker App</p>
+            <h2>${issueNumber}</h2>
+            <p> An comment was added by ${author}</p>
+            <p>${text}</p>
+            `;
+            // Sending Email
+            await sendEmail(emailBody, receivers.receivers);
+          }
+
           return { issuesResult: comment };
         } catch (ex) {
           console.log("-=-=-=-= Issue AddComment Error");
@@ -257,6 +263,32 @@ module.exports = () => {
     }
   };
 
+  const getReceivers = async (issueNumber) => {
+    // In case number is set, all comments of the selected Issue will be shown
+    const COMMENTS_ISSUE_PIPELINE = [
+      {
+        $match: { issueNumber: issueNumber },
+      },
+      {
+        $project: {
+          watchers: 1,
+        },
+      },
+    ];
+    try {
+      const watchers = await db.aggregate(COLLECTION, COMMENTS_ISSUE_PIPELINE);
+      let receivers = "";
+      if (watchers[0].watchers) {
+        watchers[0].watchers.forEach((watcher) => {
+          receivers += watcher.watcher + "; ";
+        });
+      }
+      return { receivers: receivers };
+    } catch (ex) {
+      console.log("-=-=-=-= Issue getReceivers Error");
+      return { error: ex };
+    }
+  };
   const sendEmail = async (emailBody, receivers) => {
     // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport({
@@ -371,6 +403,22 @@ module.exports = () => {
             NEW_COMMENT_PIPELINE,
             NEW_COMMENT_ITEM
           );
+
+          //  Prepare list of receivers/watchers
+          const receivers = await getReceivers(issueNumber);
+          //  If there are watchers, it proceeds to send emails
+          if (receivers.receivers != "") {
+            //  Prepare body of the email
+            const emailBody = `
+            <p>You have a new email from Bug-Tracker App</p>
+            <h2>${issueNumber}</h2>
+            <p> The status of this issue has been changed to</p>
+            <h3>${status}</h3>
+            `;
+            // Sending Email
+            await sendEmail(emailBody, receivers.receivers);
+          }
+
           return { issuesResult: comment };
         } catch (ex) {
           console.log("-=-=-=-= Issue UpdateStatus Error");
